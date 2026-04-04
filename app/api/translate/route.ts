@@ -5,66 +5,16 @@ import {
   alignPositionally,
   findVerbatimParagraph,
 } from '../../../lib/instrument-alignment';
+import {
+  stripStructure,
+  restoreStructure,
+  stripPDFNumberPrefix,
+  normalizePDFArabicText,
+} from '../../../lib/translate-helpers';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const BATCH_SIZE = 30;
-
-// ---------------------------------------------------------------------------
-// Structural template utilities
-// The source English string encodes the platform format (number prefix, XML
-// tags, multi-space gaps). We strip that structure before asking Claude to
-// match, then restore it to the Arabic text we extract from the document.
-// ---------------------------------------------------------------------------
-
-function stripStructure(source: string): string {
-  // Numbered response option: "1     All of the time" → "All of the time"
-  const optMatch = source.match(/^\d+\s{2,}(.+)$/);
-  if (optMatch) return optMatch[1].trim();
-
-  // Numbered question stem: "1. How often..." → "How often..."
-  const stemMatch = source.match(/^\d+\.\s+(.+)$/);
-  if (stemMatch) return stemMatch[1].trim();
-
-  // XML/HTML tagged: strip all tags to expose text content
-  if (/<[a-zA-Z]/.test(source)) {
-    return source.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-  }
-
-  return source;
-}
-
-function restoreStructure(source: string, arabicText: string): string {
-  const text = arabicText.trim();
-
-  // Numbered response option: detect by 2+ spaces after digit; always emit the
-  // platform standard of exactly 5 spaces regardless of source spacing.
-  const optMatch = source.match(/^(\d+)\s{2,}.+$/);
-  if (optMatch) return optMatch[1] + '     ' + text;
-
-  // Numbered question stem: restore "N. " prefix
-  const stemMatch = source.match(/^(\d+\.\s+).+$/);
-  if (stemMatch) return stemMatch[1] + text;
-
-  // XML/HTML: replace the first non-empty text node with the Arabic text,
-  // preserving any leading whitespace indent that was inside the tag (e.g. the
-  // 5-space indent in <size value='l'>     TEXT</size>).
-  if (/<[a-zA-Z]/.test(source)) {
-    let replaced = false;
-    const result = source.replace(/>[^<]+</g, (m) => {
-      if (!replaced && m.slice(1, -1).trim()) {
-        replaced = true;
-        const inner = m.slice(1, -1);
-        const leadingWS = inner.match(/^(\s+)/)?.[1] ?? '';
-        return '>' + leadingWS + text + '<';
-      }
-      return m;
-    });
-    return replaced ? result : text;
-  }
-
-  return text;
-}
 
 // For source strings that contain <br /> separators the content is a multi-line
 // block (e.g. the EXAMPLE section: header + question stem + 7 response options
@@ -166,29 +116,6 @@ function stripDiacriticsForSearch(s: string): string {
     .replace(/(^| )[\u064A\u0629\u0649]( |$)/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
-}
-
-// Strip any number prefix that came from the PDF's own layout
-// (e.g. "1 كلّ الوقت" → "كلّ الوقت", ".١ كم من الوقت" → "كم من الوقت")
-function stripPDFNumberPrefix(text: string): string {
-  return text
-    .replace(/^\d+\s+/, '')                // "1 text"
-    .replace(/^[\u0660-\u0669]+\s+/, '')   // "١ text" (Arabic-Indic digits)
-    .replace(/^\.\d+\s*/, '')              // ".1 text" (RTL period artifact)
-    .replace(/^\.[\u0660-\u0669]+\s*/, '') // ".١ text"
-    .trim();
-}
-
-// Normalize PDF extraction artifacts from Arabic/RTL text:
-//   • Gender-inclusive slash spacing: "word / suffix" → "word/suffix"
-//     PDF tokenizer inserts spaces around "/" in Arabic text
-//   • Period spacing: "sentence . next" → "sentence. next"
-//     PDF sometimes emits a space before the period when the line breaks there
-function normalizePDFArabicText(text: string): string {
-  return text
-    .replace(/(\S) \/ (\S)/g, '$1/$2')   // "مضطرا / ة" → "مضطرا/ة"
-    .replace(/(\S) \. /g, '$1. ')         // "حياتك . سوف" → "حياتك. سوف"
-    .replace(/(\S) \.$/gm, '$1.');        // trailing " ." → "."
 }
 
 // Used only for <br /> multi-segment strings where rebuildMultiSegmentXML

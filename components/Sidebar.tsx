@@ -37,7 +37,7 @@ function InstrumentContext() {
 const steps = [
   { number: 1, label: 'Study Intake', href: '/intake', description: 'Gap analysis & language status' },
   { number: 2, label: 'Migration Guidelines', href: '/guidelines', description: 'Instrument-specific rules' },
-  { number: 3, label: 'Translation Agent', href: '/translation', description: 'AI-powered string migration' },
+  { number: 3, label: 'AI Migration', href: '/translation', description: 'Verbatim string migration' },
   { number: 4, label: 'Intake Validation', href: '/validation', description: 'Structural & semantic checks' },
   { number: 5, label: 'Screenshot Review', href: '/review', description: 'Linguist flag classification' },
 ];

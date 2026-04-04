@@ -41,6 +41,17 @@ const confidenceConfig = {
   needs_review: { label: 'Human review',  rowClass: 'bg-violet-50/50',    badgeClass: 'bg-violet-50 text-violet-700 border-violet-200' },
 };
 
+// Detect the dominant script in a document and return display metadata.
+function detectDocLanguage(text: string): { label: string; dir: 'ltr' | 'rtl'; lang: string } {
+  const arabic  = (text.match(/[\u0600-\u06FF]/g) ?? []).length;
+  const korean  = (text.match(/[\uAC00-\uD7A3]/g) ?? []).length;
+  const cjk     = (text.match(/[\u4E00-\u9FFF]/g) ?? []).length;
+  if (arabic > korean + cjk) return { label: 'Arabic',            dir: 'rtl', lang: 'ar' };
+  if (korean > cjk)          return { label: 'Korean',            dir: 'ltr', lang: 'ko' };
+  if (cjk > 0)               return { label: 'Chinese/Japanese',  dir: 'ltr', lang: 'zh' };
+  return                            { label: 'Translated',        dir: 'ltr', lang: '' };
+}
+
 export default function TranslationClient({
   sampleEnglish,
   sampleGerman,
@@ -50,13 +61,12 @@ export default function TranslationClient({
   sampleGerman: string;
   guidelines: GuidelineRule[];
 }) {
-  const hasSampleEnglish = Object.keys(sampleEnglish).length > 0;
-  const hasSampleGerman  = sampleGerman.trim().length > 0;
-
   const [englishJson, setEnglishJson] = useState(sampleEnglish);
   const [translatedDoc, setTranslatedDoc] = useState(sampleGerman);
-  const [englishSource, setEnglishSource] = useState<'sample' | 'upload'>(hasSampleEnglish ? 'sample' : 'upload');
-  const [germanSource, setGermanSource]   = useState<'sample' | 'upload'>(hasSampleGerman  ? 'sample' : 'upload');
+  const [englishSource, setEnglishSource] = useState<'sample' | 'upload'>(Object.keys(sampleEnglish).length > 0 ? 'sample' : 'upload');
+  const [germanSource, setGermanSource]   = useState<'sample' | 'upload'>(sampleGerman.trim().length > 0 ? 'sample' : 'upload');
+  const [jsonFileName, setJsonFileName]   = useState<string | null>(null);
+  const [docFileName, setDocFileName]     = useState<string | null>(null);
   const [uploadedArray, setUploadedArray] = useState<Array<Record<string, string>> | null>(null);
   const [isRunning, setIsRunning]         = useState(false);
   const [result, setResult]               = useState<TranslationResult | null>(null);
@@ -67,6 +77,7 @@ export default function TranslationClient({
   const handleEnglishUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setJsonFileName(file.name);
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
@@ -86,6 +97,7 @@ export default function TranslationClient({
           setEnglishJson(parsed);
         }
         setEnglishSource('upload');
+        setResult(null);
       } catch { alert('Invalid JSON file'); }
     };
     reader.readAsText(file);
@@ -94,6 +106,7 @@ export default function TranslationClient({
   const handleGermanUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setDocFileName(file.name);
     if (file.name.toLowerCase().endsWith('.pdf')) {
       const fd = new FormData();
       fd.append('file', file);
@@ -107,6 +120,7 @@ export default function TranslationClient({
       reader.onload = (ev) => { setTranslatedDoc(ev.target?.result as string); setGermanSource('upload'); };
       reader.readAsText(file);
     }
+    setResult(null);
   };
 
   const runTranslation = async () => {
@@ -156,6 +170,7 @@ export default function TranslationClient({
     a.click();
   };
 
+  const docLang = detectDocLanguage(translatedDoc);
   const entries = result ? Object.entries(result.translations) : [];
   const highCount       = entries.filter(([, v]) => v.confidence === 'high').length;
   const medCount        = entries.filter(([, v]) => v.confidence === 'medium').length;
@@ -168,11 +183,11 @@ export default function TranslationClient({
       {/* Header */}
       <div className="mb-8">
         <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">
-          Step 3 — String Migration
+          Step 3 — AI Migration
         </p>
-        <h2 className="text-2xl font-bold text-slate-900">String Migration</h2>
+        <h2 className="text-2xl font-bold text-slate-900">AI Migration</h2>
         <p className="text-slate-500 mt-1 text-sm">
-          Matches each JSON string key to its equivalent in the author&rsquo;s translated PDF. No translation is generated — strings are copied verbatim from the source document.
+          Matches each JSON string key to its equivalent in the translated paper document. Strings are copied verbatim — no translation is generated.
         </p>
       </div>
 
@@ -196,19 +211,16 @@ export default function TranslationClient({
           </div>
           <p className="text-xs text-slate-500 mb-3">
             {Object.keys(englishJson).length > 0
-              ? `${Object.keys(englishJson).length} strings · English placeholders in target fields`
+              ? jsonFileName
+                ? `${jsonFileName} · ${Object.keys(englishJson).length} strings`
+                : `${Object.keys(englishJson).length} strings · demo data`
               : 'No file loaded — upload a JSON to begin'}
           </p>
           <div className="flex items-center gap-2">
             <input ref={englishFileRef} type="file" accept=".json" className="hidden" onChange={handleEnglishUpload} />
             <button onClick={() => englishFileRef.current?.click()} className="text-xs text-slate-500 border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-slate-50 transition-colors">
-              {Object.keys(englishJson).length > 0 ? 'Upload different file' : 'Upload JSON file'}
+              {Object.keys(englishJson).length > 0 ? 'Replace file' : 'Upload JSON file'}
             </button>
-            {englishSource === 'upload' && hasSampleEnglish && (
-              <button onClick={() => { setEnglishJson(sampleEnglish); setEnglishSource('sample'); setUploadedArray(null); }} className="text-xs text-indigo-600 hover:text-indigo-800">
-                Use sample
-              </button>
-            )}
           </div>
         </div>
 
@@ -230,19 +242,16 @@ export default function TranslationClient({
           </div>
           <p className="text-xs text-slate-500 mb-3">
             {translatedDoc.trim().length > 0
-              ? 'Paper translation · strings extracted verbatim'
+              ? docFileName
+                ? `${docFileName} · ready for extraction`
+                : 'Demo document · strings extracted verbatim'
               : 'No file loaded — upload a PDF or TXT to begin'}
           </p>
           <div className="flex items-center gap-2">
             <input ref={germanFileRef} type="file" accept=".txt,.pdf" className="hidden" onChange={handleGermanUpload} />
             <button onClick={() => germanFileRef.current?.click()} className="text-xs text-slate-500 border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-slate-50 transition-colors">
-              {translatedDoc.trim().length > 0 ? 'Upload different file' : 'Upload PDF or TXT'}
+              {translatedDoc.trim().length > 0 ? 'Replace file' : 'Upload PDF or TXT'}
             </button>
-            {germanSource === 'upload' && hasSampleGerman && (
-              <button onClick={() => { setTranslatedDoc(sampleGerman); setGermanSource('sample'); }} className="text-xs text-indigo-600 hover:text-indigo-800">
-                Use sample
-              </button>
-            )}
           </div>
         </div>
       </div>
@@ -260,7 +269,7 @@ export default function TranslationClient({
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
-              {Object.keys(englishJson).length > 30 ? `Migrating ${Object.keys(englishJson).length} strings in batches…` : 'Migration agent running…'}
+              {Object.keys(englishJson).length > 30 ? `AI migration running · ${Object.keys(englishJson).length} strings…` : 'AI migration running…'}
             </>
           ) : (
             <>
@@ -325,7 +334,7 @@ export default function TranslationClient({
                 <tr className="border-b border-slate-100">
                   <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider" style={{width: '180px'}}>Key</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">English</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Arabic (IL) — from PDF</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{docLang.label} — from PDF</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider" style={{width: '100px'}}>Match</th>
                 </tr>
               </thead>
@@ -351,7 +360,7 @@ export default function TranslationClient({
                             <code className="text-xs text-slate-500 font-mono break-all leading-relaxed">{key}</code>
                           </div>
                           <div className="px-4 py-3 text-slate-600 text-sm leading-relaxed"><RichText text={englishJson[key] ?? ''} /></div>
-                          <div className="px-4 py-3 text-slate-900 text-sm font-medium leading-relaxed" dir="rtl" lang="ar"><RichText text={entry.migrated_string ?? entry.translated_string ?? ''} /></div>
+                          <div className="px-4 py-3 text-slate-900 text-sm font-medium leading-relaxed" dir={docLang.dir} lang={docLang.lang || undefined}><RichText text={entry.migrated_string ?? entry.translated_string ?? ''} /></div>
                           <div className="px-4 py-3">
                             <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${conf.badgeClass}`}>
                               {conf.label}

@@ -32,7 +32,7 @@ const statusConfig = {
 type StatusKey = keyof typeof statusConfig;
 
 export default function IntakePage() {
-  const { study, instrument } = intakeData;
+  const { instrument } = intakeData;
   const languages: Language[] = intakeData.languages as Language[];
 
   return (
@@ -48,22 +48,9 @@ export default function IntakePage() {
         </p>
       </div>
 
-      {/* Study info card */}
+      {/* Instrument info card */}
       <div className="bg-white border border-slate-200 rounded-xl p-6 mb-6">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Study</p>
-            <p className="font-semibold text-slate-900">{study.code}</p>
-            <p className="text-sm text-slate-500 mt-0.5">{study.title}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-slate-400">Sponsor</p>
-            <p className="text-sm font-medium text-slate-700">{study.sponsor}</p>
-            <p className="text-xs text-slate-400 mt-1">Submitted {study.submitted}</p>
-          </div>
-        </div>
-
-        <div className="border-t border-slate-100 pt-4 grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <div>
             <p className="text-xs text-slate-400 mb-0.5">Instrument</p>
             <p className="text-sm font-semibold text-slate-900">{instrument.name} v{instrument.version}</p>

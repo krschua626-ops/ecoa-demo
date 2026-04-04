@@ -1,0 +1,66 @@
+{
+  "instrument": "IBDQ v1.0",
+  "language": "Arabic (Israel)",
+  "runAt": "2024-10-08T11:17:43Z",
+  "structural": {
+    "passed": true,
+    "checks": [
+      { "id": "struct-001", "label": "Key count match", "detail": "265 keys in source JSON · 265 keys in translated output", "passed": true },
+      { "id": "struct-002", "label": "No missing keys", "detail": "All source keys present in translated output", "passed": true },
+      { "id": "struct-003", "label": "No blank translated strings", "detail": "All 265 translated values are non-empty", "passed": true },
+      { "id": "struct-004", "label": "UTF-8 encoding valid", "detail": "All characters encode correctly · Arabic script and diacritics verified", "passed": true },
+      { "id": "struct-005", "label": "No trailing whitespace or control characters", "detail": "Clean string boundaries on all keys", "passed": true },
+      { "id": "struct-006", "label": "JSON schema valid", "detail": "Output conforms to expected schema: { translated_string, confidence, confidence_rationale, flags }", "passed": true }
+    ]
+  },
+  "semantic": {
+    "flagCount": 2,
+    "flags": [
+      {
+        "id": "sem-001",
+        "key": "c1b1d269-fb1e-40b2-9a5f-6a661d6bc44a",
+        "severity": "medium",
+        "routing": "routed_to_team",
+        "englishSource": "3. How often during the last 2 weeks have you felt frustrated, impatient, or restless?",
+        "translatedString": "3. كم مرة خلال الأسبوعين الماضيين شعرت بالإحباط أو عدم الصبر أو عدم الارتياح؟",
+        "issue": "Back-translation check: 'عدم الارتياح' (lack of comfort/unease) is a softer rendering of 'restless' than the clinically preferred 'القلق الحركي'. The chosen term may under-capture psychomotor agitation relevant to IBD-related anxiety.",
+        "recommendedAction": "Confirm with instrument owner whether 'عدم الارتياح' is the validated Arabic term. If the validated wording uses 'القلق' or 'التململ', update to match and document in migration log."
+      },
+      {
+        "id": "sem-002",
+        "key": "e5bcb435-4272-453b-8082-4049441b687a",
+        "severity": "medium",
+        "routing": "routed_to_team",
+        "englishSource": "7. How often during the last 2 weeks did you feel worried about the possibility of needing to have surgery because of your bowel problem?",
+        "translatedString": "7. كم مرة خلال الأسبوعين الماضيين شعرت بالقلق من احتمال الحاجة إلى إجراء عملية جراحية بسبب مشكلة الأمعاء لديك؟",
+        "issue": "'عملية جراحية' is a formal clinical term for surgery. Patient-facing Arabic instruments sometimes use 'عملية' alone or 'تدخل جراحي'. The current term is accurate but may read as more clinical/alarming than the neutral English 'surgery'.",
+        "recommendedAction": "Verify the validated Arabic translation on file. If the Mapi-approved version uses a different term, update to match. If 'عملية جراحية' is the validated term, document and close."
+      }
+    ]
+  },
+  "instrumentContext": {
+    "flagCount": 2,
+    "flags": [
+      {
+        "id": "ctx-001",
+        "key": "fae3da27-bfe1-41d2-86ee-f87a4ff10beb",
+        "severity": "low",
+        "routing": "auto_resolved",
+        "guidelineRef": "ibdq-006",
+        "translatedString": "1. كم مرة كانت حركات الأمعاء لديك خلال الأسبوعين الماضيين؟ يرجى الإشارة إلى مدى تكرار حركات الأمعاء لديك خلال الأسبوعين الماضيين باختيار أحد الخيارات التالية",
+        "issue": "Translated string is 164 characters — exceeds the 80-character soft limit defined in guideline ibdq-006. The Arabic rendering of this item stem is significantly longer than the English source.",
+        "recommendedAction": "Auto-resolved: string length is a known property of this item in Arabic (Arabic script requires more characters for equivalent meaning). Instrument services to confirm natural line-break point at the second sentence boundary. No content change required."
+      },
+      {
+        "id": "ctx-002",
+        "key": "2207c1fd-9feb-47a9-a43a-7c71ec585452",
+        "severity": "medium",
+        "routing": "routed_to_team",
+        "guidelineRef": "ibdq-003",
+        "translatedString": "1     حركات الأمعاء بنفس التكرار أو أكثر مما كانت عليه في أسوأ الأوقات",
+        "issue": "In RTL rendering, the numeric prefix '1' appears at the far right of the string rather than the left, which reverses the expected 1→7 visual order of response options on screen. This conflicts with guideline ibdq-003 on RTL numeric placement.",
+        "recommendedAction": "Instrument services to confirm whether the platform's RTL engine handles numeric prefix alignment automatically, or whether a Unicode LRM (left-to-right mark) must be inserted before the digit. Verify on target device before build."
+      }
+    ]
+  }
+}

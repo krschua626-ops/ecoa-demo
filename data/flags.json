@@ -1,0 +1,42 @@
+[
+  {
+    "id": "flag-001",
+    "key": "fae3da27-bfe1-41d2-86ee-f87a4ff10beb",
+    "status": "pending",
+    "translatedString": "1. كم مرة كانت حركات الأمعاء لديك خلال الأسبوعين الماضيين؟ يرجى الإشارة إلى مدى تكرار حركات الأمعاء لديك خلال الأسبوعين الماضيين باختيار أحد الخيارات التالية",
+    "proposedEdit": "1. كم مرة كانت حركات الأمعاء لديك خلال الأسبوعين الماضيين؟ يرجى الإشارة إلى مدى تكرار حركات الأمعاء لديك خلال الأسبوعين الماضيين باختيار أحد الخيارات التالية:",
+    "linguistNote": "The translated string is missing a colon at the end. The English source ends with 'from' leading into the response options list, and Arabic convention requires a colon (：) before a list of options. Proposing to add ':' as a punctuation correction.",
+    "englishReference": "1. How frequent have your bowel movements been during the last two weeks? Please indicate how frequent your bowel movements have been during the last two weeks by selecting one of the options from",
+    "proposedEditDisplay": "...أحد الخيارات التالية:"
+  },
+  {
+    "id": "flag-002",
+    "key": "c1b1d269-fb1e-40b2-9a5f-6a661d6bc44a",
+    "status": "pending",
+    "translatedString": "3. كم مرة خلال الأسبوعين الماضيين شعرت بالإحباط أو عدم الصبر أو عدم الارتياح؟",
+    "proposedEdit": "3. كم مرة خلال الأسبوعين الماضيين شعرت بالإحباط أو التوتر أو التململ؟",
+    "linguistNote": "'عدم الارتياح' (lack of ease) is a weak rendering of 'restless'. In clinical Arabic, 'التململ' (restlessness/fidgeting) better captures the psychomotor connotation. Similarly, 'عدم الصبر' (lack of patience) could be replaced by 'التوتر' (tension/impatience) for a more clinical register.",
+    "englishReference": "3. How often during the last 2 weeks have you felt frustrated, impatient, or restless?",
+    "proposedEditDisplay": "...أو التوتر أو التململ؟"
+  },
+  {
+    "id": "flag-003",
+    "key": "e5bcb435-4272-453b-8082-4049441b687a",
+    "status": "pending",
+    "translatedString": "7. كم مرة خلال الأسبوعين الماضيين شعرت بالقلق من احتمال الحاجة إلى إجراء عملية جراحية بسبب مشكلة الأمعاء لديك؟",
+    "proposedEdit": "7. كم مرة خلال الأسبوعين الماضيين شعرت بالقلق من احتمال الحاجة إلى إجراء عملية بسبب مشكلة الأمعاء لديك؟",
+    "linguistNote": "'عملية جراحية' is a formal clinical compound. In patient-facing instruments, 'عملية' alone is more accessible and less alarming, which better matches the neutral register of the English 'surgery'. Proposing to remove 'جراحية' to soften the clinical tone.",
+    "englishReference": "7. How often during the last 2 weeks did you feel worried about the possibility of needing to have surgery because of your bowel problem?",
+    "proposedEditDisplay": "...إلى إجراء عملية بسبب..."
+  },
+  {
+    "id": "flag-004",
+    "key": "2207c1fd-9feb-47a9-a43a-7c71ec585452",
+    "status": "pending",
+    "translatedString": "1     حركات الأمعاء بنفس التكرار أو أكثر مما كانت عليه في أسوأ الأوقات",
+    "proposedEdit": "\u200F1     حركات الأمعاء بنفس التكرار أو أكثر مما كانت عليه في أسوأ الأوقات",
+    "linguistNote": "In RTL rendering, the leading '1' digit is pulled to the right margin, reversing the visual order of the 1–7 scale. Proposing to prepend a Unicode LRM (U+200F, Right-to-Left Mark) before the digit to anchor it to the left side of the RTL container, maintaining the expected ascending visual order.",
+    "englishReference": "1     BOWEL MOVEMENTS AS OR MORE FREQUENT THAN THEY HAVE EVER BEEN",
+    "proposedEditDisplay": "‏[LRM]1     حركات الأمعاء..."
+  }
+]

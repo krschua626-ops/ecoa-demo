@@ -1,0 +1,54 @@
+PHQ-9 Patientengesundheitsfragebogen
+Deutsche Übersetzung – Validierte Version (Kroenke et al., 2001)
+Übersetzt und validiert für den deutschsprachigen Raum
+
+KOPFZEILENANWEISUNG
+Wie oft fühlten Sie sich in den letzten 2 Wochen durch die folgenden Beschwerden beeinträchtigt?
+
+ITEM 1
+Wenig Interesse oder Freude an Ihren Tätigkeiten
+
+ITEM 2
+Niedergeschlagenheit, Schwermut oder Hoffnungslosigkeit
+
+ITEM 3
+Schwierigkeiten, ein- oder durchzuschlafen, oder vermehrter Schlaf
+
+ITEM 4
+Müdigkeit oder Gefühl, keine Energie zu haben
+
+ITEM 5
+Verminderter Appetit oder übermäßiges Essen
+
+ITEM 6
+Schlechte Meinung von sich selbst; das Gefühl, ein Versager zu sein oder sich selbst oder Ihre Familie im Stich gelassen zu haben
+
+ITEM 7
+Schwierigkeiten, sich auf Dinge zu konzentrieren, z. B. beim Lesen der Zeitung oder beim Fernsehen
+
+ITEM 8
+Waren Ihre Bewegungen oder Ihre Sprache so verlangsamt, dass andere Menschen es bemerkt haben könnten? Oder das Gegenteil davon – so ruhelos oder aufgewühlt sein, dass Sie sich viel mehr als sonst bewegt haben
+
+ITEM 9
+Gedanken, dass Sie lieber tot wären oder sich in irgendeiner Weise Schaden zufügen wollten
+
+SICHERHEITSHINWEIS (Item 9 – erscheint unterhalb der Antwortoptionen)
+Wenn Sie Gedanken haben, sich selbst zu schaden, informieren Sie bitte sofort Ihr Studienpersonal oder rufen Sie den Notruf.
+
+ANTWORTOPTIONEN (für alle Items 1–9)
+Überhaupt nicht
+An einzelnen Tagen
+An mehr als der Hälfte der Tage
+Beinahe jeden Tag
+
+GESAMTPUNKTZAHL
+Gesamtpunktzahl
+Unvollständig
+
+ABSCHLUSSFRAGE (funktionelle Beeinträchtigung)
+Wenn Sie irgendwelche Probleme angekreuzt haben, wie schwierig war es für Sie deswegen, Ihre Arbeit zu erledigen, den Haushalt zu führen oder mit anderen Menschen auszukommen?
+
+ANMERKUNGEN DER ÜBERSETZERIN
+– Item 6: Die Formulierung „im Stich gelassen" ist die im deutschsprachigen Raum validierte Übersetzung für „let yourself or your family down" und darf nicht geändert werden.
+– Item 8: Der Satz ist bewusst lang und komplex, da er im validierten Original ebenfalls komplex ist. Nicht kürzen.
+– Der Begriff „Beschwerden" in der Kopfzeilenanweisung ist die validierte Übersetzung und entspricht dem klinischen Sprachgebrauch.

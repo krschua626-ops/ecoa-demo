@@ -1,0 +1,65 @@
+{
+  "instrument": "IBDQ",
+  "version": "1.0",
+  "language": "Arabic (Israel)",
+  "lastUpdated": "2024-10-08",
+  "updatedBy": "Instrument Services — EN Build Team",
+  "rules": [
+    {
+      "id": "ibdq-001",
+      "type": "Response Scale",
+      "title": "Response options must use vertical radio buttons on a 7-point Likert scale",
+      "rule": "All seven frequency or severity response options must be rendered as vertically stacked radio buttons numbered 1–7. Dropdown selects, horizontal layouts, and slider controls are not permitted. The numeric label must appear to the right of the radio button in RTL rendering.",
+      "rationale": "The IBDQ uses a 7-point Likert scale validated in paper format. Altering the visual layout or scale granularity changes the psychometric properties of the instrument."
+    },
+    {
+      "id": "ibdq-002",
+      "type": "Pagination",
+      "title": "One item per screen card",
+      "rule": "Each of the 32 items must occupy its own screen card. Items may not be grouped or displayed simultaneously, even on larger screens or tablet devices.",
+      "rationale": "Grouping items increases cognitive load and has been shown to alter response patterns relative to the validated paper format."
+    },
+    {
+      "id": "ibdq-003",
+      "type": "Formatting",
+      "title": "Right-to-left text direction must be applied throughout",
+      "rule": "All Arabic strings must be rendered with dir='rtl' and text-align: right. Numeric response labels (1–7) must remain in Arabic-Indic or Western Arabic numerals as specified in the validated translation. Mixed-direction strings (e.g. 'IBDQ' appearing in RTL text) must use Unicode bidirectional marks, not manual spacing.",
+      "rationale": "Incorrect text direction is a critical rendering defect that affects readability and alters the respondent experience relative to the paper source."
+    },
+    {
+      "id": "ibdq-004",
+      "type": "Formatting",
+      "title": "Response option numeric prefix must be preserved verbatim",
+      "rule": "Each response option string includes a numeric prefix (e.g. '1     ALL OF THE TIME'). The number and spacing must be preserved exactly as authored. Do not strip, reformat, or replace numeric prefixes with bullet points or icons.",
+      "rationale": "The numeric prefix is part of the author-approved response label and is referenced in the scoring algorithm and patient instructions."
+    },
+    {
+      "id": "ibdq-005",
+      "type": "Scoring",
+      "title": "Domain scores and total score are read-only and auto-calculated",
+      "rule": "The IBDQ produces four domain scores (Bowel, Systemic, Emotional, Social) and a total score. All must be computed automatically from item responses and displayed in read-only fields. Partial scores must display 'Incomplete' if any item in the domain is unanswered.",
+      "rationale": "Editable score fields introduce data integrity risk. Domain score labels must match the validated Arabic terminology for each of the four IBDQ domains."
+    },
+    {
+      "id": "ibdq-006",
+      "type": "Formatting",
+      "title": "Item stem line length: 80-character soft limit in Arabic rendering",
+      "rule": "Item stems should break naturally within 80 characters per line in the Arabic rendering. Where a translated stem exceeds this, insert a natural break at a clause boundary — do not truncate or hyphenate. Flag any stem exceeding 120 characters for instrument services review.",
+      "rationale": "Arabic script with diacritics can render wider than the Latin equivalent. The 80-char limit ensures readability on the minimum supported device width (360px)."
+    },
+    {
+      "id": "ibdq-007",
+      "type": "Edge Case",
+      "title": "Header timeframe instruction appears on first item only",
+      "rule": "The screening timeframe instruction (asking about the past 2 weeks) appears in the item stem of each question individually. Do not add a shared global header repeating this instruction, as it would duplicate text that is already embedded in each validated item stem.",
+      "rationale": "Unlike the PHQ-9, the IBDQ embeds the timeframe within each item stem. Adding a global header would create redundancy not present in the validated paper format."
+    },
+    {
+      "id": "ibdq-008",
+      "type": "Edge Case",
+      "title": "IBDQ-Stoma variant items must not appear in the standard IBDQ build",
+      "rule": "Items 1, 5, 17, 22, and 24 have Stoma variants used only in IBDQ-Stoma administrations. The standard IBDQ build must use only the non-Stoma versions of these items. The Stoma variant strings must not appear in any screen of the standard instrument.",
+      "rationale": "Mixing Stoma and non-Stoma items produces an invalid administration that cannot be scored against IBDQ normative data."
+    }
+  ]
+}

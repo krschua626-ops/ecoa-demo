@@ -1,0 +1,54 @@
+{
+  "study": {
+    "code": "IBD-2024-017",
+    "title": "A Phase III Observational Study of Quality of Life in Inflammatory Bowel Disease",
+    "sponsor": "Meridian Clinical Research",
+    "submitted": "2024-10-08"
+  },
+  "instrument": {
+    "name": "IBDQ",
+    "fullName": "Inflammatory Bowel Disease Questionnaire",
+    "version": "1.0",
+    "itemCount": 32,
+    "copyrightHolder": "McMaster University",
+    "licenseStatus": "active",
+    "licenseExpiry": "2026-12-31"
+  },
+  "languages": [
+    {
+      "code": "ar-IL",
+      "label": "Arabic (Israel)",
+      "status": "migration_required",
+      "priorVersion": null,
+      "notes": "No prior eCOA migration exists for this language-version pair. Paper translation provided by sponsor (Mapi, v1.0, March 2017)."
+    },
+    {
+      "code": "en-US",
+      "label": "English (United States)",
+      "status": "reuse_available",
+      "priorVersion": "1.0",
+      "notes": "Exact version match. Source build cleared for reuse — no content changes required."
+    },
+    {
+      "code": "fr-FR",
+      "label": "French (France)",
+      "status": "reuse_available",
+      "priorVersion": "1.0",
+      "notes": "v1.0 migration available. Delta review required for 2 modified item stems in domain 4."
+    },
+    {
+      "code": "de-DE",
+      "label": "German (Germany)",
+      "status": "migration_required",
+      "priorVersion": null,
+      "notes": "New market entry. Paper translation provided by sponsor; no prior eCOA migration on file."
+    },
+    {
+      "code": "zh-CN",
+      "label": "Chinese (Simplified)",
+      "status": "pending_license",
+      "priorVersion": null,
+      "notes": "License request submitted 2024-09-15. Awaiting copyright holder approval from McMaster University."
+    }
+  ]
+}

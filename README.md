@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# eCOA Localization Workflow — Prototype Demo
 
-## Getting Started
+AI-powered eCOA localization workflow demonstrating a five-agent system for instrument string migration.
 
-First, run the development server:
+## Setup
 
+### 1. Install dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Add your Anthropic API key
+```bash
+cp .env.local.example .env.local
+# Edit .env.local and replace 'your_api_key_here' with your real key
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Build and start
+```bash
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+> **Note:** Run `npm run build` after any code changes before restarting the server.
 
-To learn more about Next.js, take a look at the following resources:
+## Demo flow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Step | Screen | Agent | Type |
+|------|--------|-------|------|
+| 1 | Study Intake | Orchestration Agent | Simulated |
+| 2 | Migration Guidelines | Guidelines Agent | Simulated |
+| 3 | Translation Agent | Translation Agent | **Live AI** |
+| 4 | Intake Validation | Intake Agent | Simulated |
+| 5 | Screenshot Review | Review Classification Agent | **Live AI** |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Live AI calls
 
-## Deploy on Vercel
+- **Screen 3 — Translation Agent**: click Run Translation → returns per-string translations with confidence scores
+- **Screen 5 — Screenshot Review**: click any flag card → classifies issue type, authority scope, and recommended disposition
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Sample data
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Pre-loaded in `data/`:
+- `sample-english.json` — PHQ-9 English eCOA JSON (18 strings)
+- `sample-german.txt` — validated German paper translation
+- `guidelines.json` — 8 PHQ-9 migration rules
+- `intake.json` — study intake gap analysis
+- `intake-validation.json` — pre-seeded validation results
+- `flags.json` — 4 linguist flags for screenshot review
+
+## API routes
+
+| Route | Method | Description |
+|-------|--------|-------------|
+| `/api/translate` | POST | Translation Agent — calls claude-sonnet-4-20250514 |
+| `/api/classify-flag` | POST | Review Classification Agent — calls claude-sonnet-4-20250514 |
+| `/api/health` | GET | Health check |
+
+## Environment
+
+```
+ANTHROPIC_API_KEY=sk-ant-...
+```

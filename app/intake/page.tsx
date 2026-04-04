@@ -1,5 +1,15 @@
 import Link from 'next/link';
-import intakeData from '@/data/intake.json';
+import intakeDataRaw from '@/data/intake.json';
+
+type Language = {
+  code: string;
+  label: string;
+  status: string;
+  priorVersion: string | null;
+  notes: string;
+};
+
+const intakeData = intakeDataRaw as typeof intakeDataRaw & { languages: Language[] };
 
 const statusConfig = {
   reuse_available: {
@@ -22,7 +32,8 @@ const statusConfig = {
 type StatusKey = keyof typeof statusConfig;
 
 export default function IntakePage() {
-  const { study, instrument, languages } = intakeData;
+  const { study, instrument } = intakeData;
+  const languages: Language[] = intakeData.languages as Language[];
 
   return (
     <div className="p-8 max-w-4xl">
@@ -95,7 +106,7 @@ export default function IntakePage() {
           <tbody className="divide-y divide-slate-100">
             {languages.map((lang) => {
               const config = statusConfig[lang.status as StatusKey];
-              const isSelected = lang.code === 'ar-IL';
+              const isSelected = lang.status === 'migration_required';
               return (
                 <tr
                   key={lang.code}
@@ -134,9 +145,17 @@ export default function IntakePage() {
       </div>
 
       {/* CTA */}
+      {(() => {
+        const activeLang = languages.find(l => l.status === 'migration_required') ?? languages[0];
+        const ctaLabel = instrument.name
+          ? `${instrument.name}${instrument.version ? ` v${instrument.version}` : ''}${activeLang ? ` · ${activeLang.label}` : ''}`
+          : null;
+        return (
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-400">
-          Proceeding with <span className="font-medium text-slate-600">IBDQ v1.0 · Arabic (Israel)</span>
+          {ctaLabel
+            ? <>Proceeding with <span className="font-medium text-slate-600">{ctaLabel}</span></>
+            : <span className="italic">No instrument loaded — fill in intake data to proceed.</span>}
         </p>
         <Link
           href="/guidelines"
@@ -148,6 +167,8 @@ export default function IntakePage() {
           </svg>
         </Link>
       </div>
+        );
+      })()}
     </div>
   );
 }

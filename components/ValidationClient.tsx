@@ -125,6 +125,23 @@ export default function ValidationClient({ data }: { data: ValidationData }) {
   const [ctxOpen, setCtxOpen] = useState(true);
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
 
+  // Handle empty/unrun state
+  if (!data.structural || !data.semantic || !data.instrumentContext) {
+    return (
+      <div className="p-8 max-w-4xl">
+        <div className="mb-8">
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Step 4 — Intake Agent</p>
+          <h2 className="text-2xl font-bold text-slate-900">Intake Validation</h2>
+          <p className="text-slate-500 mt-1 text-sm">Structural, semantic, and instrument-context validation of the translated output.</p>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-xl p-12 text-center">
+          <p className="text-slate-400 text-sm">No validation data available.</p>
+          <p className="text-slate-400 text-xs mt-1">Complete the Translation Agent step first, then run validation.</p>
+        </div>
+      </div>
+    );
+  }
+
   const totalFlags = data.semantic.flagCount + data.instrumentContext.flagCount;
 
   return (

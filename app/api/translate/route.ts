@@ -179,6 +179,18 @@ function stripPDFNumberPrefix(text: string): string {
     .trim();
 }
 
+// Normalize PDF extraction artifacts from Arabic/RTL text:
+//   • Gender-inclusive slash spacing: "word / suffix" → "word/suffix"
+//     PDF tokenizer inserts spaces around "/" in Arabic text
+//   • Period spacing: "sentence . next" → "sentence. next"
+//     PDF sometimes emits a space before the period when the line breaks there
+function normalizePDFArabicText(text: string): string {
+  return text
+    .replace(/(\S) \/ (\S)/g, '$1/$2')   // "مضطرا / ة" → "مضطرا/ة"
+    .replace(/(\S) \. /g, '$1. ')         // "حياتك . سوف" → "حياتك. سوف"
+    .replace(/(\S) \.$/gm, '$1.');        // trailing " ." → "."
+}
+
 // Used only for <br /> multi-segment strings where rebuildMultiSegmentXML
 // needs a single anchor line for document positioning.
 // All other strings use findVerbatimParagraph() from instrument-alignment.ts.
@@ -286,20 +298,6 @@ Confidence: high = clear match; medium = paraphrased/inferred; low = not found.
 Return ONLY the JSON object. Start with { and end with }.`;
 }
 
-// Strings that require human review regardless of match quality.
-// These cannot be reliably auto-migrated:
-//   104678e6 — copyright footer (vendor rewrote it; no verbatim equivalent in PDF)
-//   302dae4a — short instrument title (two forms in PDF; editorial choice)
-//   25200018 — Q18 option 6 ("HARDLY ANY TROUBLE") — scale cross-contamination risk
-//   a284f96c — Q18 option 7 ("NO TROUBLE") — scale cross-contamination risk
-//   d3e314f4 — instructions header (3 separate <u><size> spans → vendor collapsed to 1; editorial)
-const NEEDS_REVIEW_UUIDS = new Set([
-  '104678e6-7697-4c05-bfa9-90d14b3f87e8',
-  '302dae4a-a5bf-4ea3-a8c5-74add47bfc1e',
-  '25200018-d5fd-4b8a-92f9-0b5e10bd69c6',
-  'a284f96c-3cce-4cfb-83c3-d49c85e27a5c',
-  'd3e314f4-5fda-4e72-8fd7-46a53c1eb0f7',
-]);
 
 // What Claude returns per string — two modes depending on script
 type ClaudeAnchorEntry = {
@@ -315,7 +313,7 @@ type ClaudeAnchorEntry = {
 // What the API returns to the client (migrated_string populated from verbatim extraction)
 type MigrationEntry = {
   migrated_string: string;
-  confidence: 'high' | 'medium' | 'low' | 'needs_review';
+  confidence: 'high' | 'medium' | 'low';
   confidence_rationale: string;
   flags: string[];
 };
@@ -384,21 +382,10 @@ export async function POST(request: NextRequest) {
 
   for (const { uuid, rawPDFText, confidence: posConf } of positionalResults) {
     const source = sourceJson[uuid];
-    const fallback = source ?? '';
-
-    if (NEEDS_REVIEW_UUIDS.has(uuid)) {
-      allTranslations[uuid] = {
-        migrated_string: fallback,
-        confidence: 'needs_review',
-        confidence_rationale: 'Flagged for human review — auto-migration disabled.',
-        flags: [],
-      };
-      continue;
-    }
 
     if (rawPDFText && posConf === 'high') {
       // Direct positional match — restore platform structure and store
-      const cleanText = stripPDFNumberPrefix(rawPDFText);
+      const cleanText = normalizePDFArabicText(stripPDFNumberPrefix(rawPDFText));
       const migratedString = source ? restoreStructure(source, cleanText) : cleanText;
       allTranslations[uuid] = {
         migrated_string: migratedString,
@@ -471,21 +458,13 @@ export async function POST(request: NextRequest) {
               strippedLen,
             );
             if (verbatimText) {
-              const cleanText = stripPDFNumberPrefix(verbatimText);
+              const cleanText = normalizePDFArabicText(stripPDFNumberPrefix(verbatimText));
               migratedString = source ? restoreStructure(source, cleanText) : cleanText;
             } else {
               confidence = 'low';
               anchorEntry.confidence_rationale = `Anchor "${anchorEntry.match_anchor}" not found. English placeholder retained.`;
             }
           }
-        }
-
-        if (NEEDS_REVIEW_UUIDS.has(uuid)) {
-          confidence = 'needs_review';
-          migratedString = fallback;
-          anchorEntry.confidence_rationale =
-            'Flagged for human review. Auto-migration disabled: ' +
-            anchorEntry.confidence_rationale;
         }
 
         allTranslations[uuid] = {

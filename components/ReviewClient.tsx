@@ -266,10 +266,7 @@ export default function ReviewClient({
 
     setClassifying(true);
     try {
-      const relevantGuidelines = guidelines.filter(g =>
-        ['ibdq-003', 'ibdq-004', 'ibdq-006', 'ibdq-007'].includes(g.id)
-      );
-
+      // Pass all available guidelines as context — no instrument-specific filter
       const res = await fetch('/api/classify-flag', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -280,8 +277,8 @@ export default function ReviewClient({
           proposedEdit: flag.proposedEdit,
           englishReference: flag.englishReference,
           linguistNote: flag.linguistNote,
-          instrumentContext: { instrument: 'IBDQ', version: '1.0', language: 'Arabic (Israel)' },
-          priorDecisions: relevantGuidelines,
+          instrumentContext: null,
+          priorDecisions: guidelines,
         }),
       });
 
@@ -311,7 +308,7 @@ export default function ReviewClient({
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-slate-900">Screenshot Review</h2>
-            <p className="text-slate-500 mt-1 text-sm">AI-powered flag classification and disposition for IBDQ v1.0 · Arabic (Israel).</p>
+            <p className="text-slate-500 mt-1 text-sm">AI-powered flag classification and disposition for linguist-submitted flags.</p>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-slate-500"><span className="font-semibold text-slate-900">{pendingFlags.length}</span> pending</span>

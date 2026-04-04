@@ -28,17 +28,19 @@ const Q_STEM_SRC = /^(\d+)\.\s/;
 /** Source response option: "1     ALL OF THE TIME" */
 const OPTION_SRC = /^(\d+)\s{2,}/;
 
-/** Lines that mark a hard stop when collecting paragraph continuations. */
+/**
+ * Lines that mark a hard stop when collecting paragraph continuations.
+ * These are generic document-boundary signals — no instrument-specific content.
+ */
 const STOP_PATTERNS: RegExp[] = [
-  Q_STEM_PDF,
-  OPTION_PDF,
-  /^IBDQ\s*$/,
-  /^McMaster/,
-  /©/,
-  /milo@mcmaster/,
-  /Final version/i,
-  /^WPAI/i,
-  /ID058965/,
+  Q_STEM_PDF,   // Next numbered question stem in the PDF
+  OPTION_PDF,   // Next numbered response option in the PDF
+  /©/,          // Copyright notice — always a document boundary
+  /^\s*[-─═]{4,}\s*$/, // Horizontal rule / section separator
+  /^(Version|v\d+\.\d)/i, // Version lines (e.g. "Version 2.0", "v1.0 Final")
+  /^www\./i,    // Website URLs — typically in footers
+  /^https?:\/\//i, // Full URLs
+  /\w+@\w+\.\w+/, // Email addresses — typically in footers/headers
 ];
 
 function isStopLine(line: string): boolean {
@@ -100,20 +102,23 @@ export function buildPDFIndex(pdfText: string): PDFIndex {
       currentQ = parseInt(stemM[1]);
       let text = line;
       // Collect instruction-tail continuation lines
-      // (e.g. "الرجاء اختيار إجابة واحدة من" that the vendor appends)
+      // (e.g. "الرجاء اختيار إجابة واحدة من" that may span multiple PDF lines)
+      // Stop only at the next question stem, response option, or document boundary
+      // (all covered by isStopLine). Do not restrict to specific Arabic prefixes —
+      // the tail can split across lines at arbitrary word boundaries.
       i++;
       while (i < lines.length) {
         const next = lines[i];
-        if (
-          /^(الرجاء|وذلك|وباختيار)/.test(next) &&
-          !isStopLine(next)
-        ) {
-          text += ' ' + next;
-          i++;
-        } else {
+        if (isStopLine(next)) {
           i--; // put back so the outer loop re-reads this line
           break;
         }
+        if (!hasTranslatedScript(next) && next.length > 3) {
+          i--; // Latin/numeric header — not a continuation
+          break;
+        }
+        text += ' ' + next;
+        i++;
       }
       stems.set(currentQ, text);
       continue;

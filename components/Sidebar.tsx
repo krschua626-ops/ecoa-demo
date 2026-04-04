@@ -2,6 +2,37 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import intakeDataRaw from '@/data/intake.json';
+
+type Language = { code: string; label: string; status: string };
+
+const { instrument } = intakeDataRaw;
+const languages = intakeDataRaw.languages as Language[];
+
+// Derive active language: first with status migration_required, or first language overall
+const activeLang =
+  languages.find((l) => l.status === 'migration_required') ?? languages[0] ?? null;
+
+function InstrumentContext() {
+  const hasInstrument = !!instrument.name;
+  return (
+    <div className="px-6 py-3 bg-slate-800 border-b border-slate-700">
+      <p className="text-xs text-slate-400 mb-0.5">Active instrument</p>
+      {hasInstrument ? (
+        <>
+          <p className="text-sm font-medium text-indigo-300">
+            {instrument.name}{instrument.version ? ` v${instrument.version}` : ''}
+          </p>
+          {activeLang && (
+            <p className="text-xs text-slate-400 mt-0.5">{activeLang.label}</p>
+          )}
+        </>
+      ) : (
+        <p className="text-xs text-slate-500 italic">No instrument loaded</p>
+      )}
+    </div>
+  );
+}
 
 const steps = [
   { number: 1, label: 'Study Intake', href: '/intake', description: 'Gap analysis & language status' },
@@ -25,12 +56,8 @@ export default function Sidebar() {
         <h1 className="text-white font-semibold text-sm leading-tight">Localization Workflow</h1>
       </div>
 
-      {/* Instrument context strip */}
-      <div className="px-6 py-3 bg-slate-800 border-b border-slate-700">
-        <p className="text-xs text-slate-400 mb-0.5">Active instrument</p>
-        <p className="text-sm font-medium text-indigo-300">IBDQ v1.0</p>
-        <p className="text-xs text-slate-400 mt-0.5">Arabic (Israel)</p>
-      </div>
+      {/* Instrument context strip — populated from intake.json */}
+      <InstrumentContext />
 
       {/* Navigation steps */}
       <nav className="flex-1 px-3 py-4">

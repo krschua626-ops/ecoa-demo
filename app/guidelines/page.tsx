@@ -1,5 +1,8 @@
 import Link from 'next/link';
-import guidelinesData from '@/data/guidelines.json';
+import guidelinesDataRaw from '@/data/guidelines.json';
+
+type GuidelineRule = { id: string; type: string; title: string; rule: string; rationale: string };
+const guidelinesData = guidelinesDataRaw as typeof guidelinesDataRaw & { rules: GuidelineRule[] };
 
 const typeConfig: Record<string, { className: string }> = {
   'Response Scale': { className: 'bg-violet-50 text-violet-700 border-violet-200' },
@@ -11,7 +14,8 @@ const typeConfig: Record<string, { className: string }> = {
 };
 
 export default function GuidelinesPage() {
-  const { instrument, version, language, lastUpdated, updatedBy, rules } = guidelinesData;
+  const { instrument, version, language, lastUpdated, updatedBy } = guidelinesData;
+  const rules: GuidelineRule[] = guidelinesData.rules as GuidelineRule[];
 
   return (
     <div className="p-8 max-w-4xl">

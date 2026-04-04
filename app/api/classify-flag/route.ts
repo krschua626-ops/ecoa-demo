@@ -24,8 +24,9 @@ export async function POST(request: NextRequest) {
   const prompt = `You are an expert eCOA (electronic Clinical Outcome Assessment) instrument services specialist reviewing a linguist's flag during screenshot review of a translated eCOA instrument.
 
 ## Instrument Context
-- Instrument: ${instrumentContext?.instrument ?? 'PHQ-9'} v${instrumentContext?.version ?? '1.2'}
-- Language: ${instrumentContext?.language ?? 'German (Germany)'}
+${instrumentContext
+  ? `- Instrument: ${instrumentContext.instrument}${instrumentContext.version ? ` v${instrumentContext.version}` : ''}\n- Language: ${instrumentContext.language}`
+  : '- No instrument context provided'}
 - String key: ${flaggedKey}
 
 ## Approved English Reference

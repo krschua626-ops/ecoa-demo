@@ -50,10 +50,13 @@ export default function TranslationClient({
   sampleGerman: string;
   guidelines: GuidelineRule[];
 }) {
+  const hasSampleEnglish = Object.keys(sampleEnglish).length > 0;
+  const hasSampleGerman  = sampleGerman.trim().length > 0;
+
   const [englishJson, setEnglishJson] = useState(sampleEnglish);
   const [translatedDoc, setTranslatedDoc] = useState(sampleGerman);
-  const [englishSource, setEnglishSource] = useState<'sample' | 'upload'>('sample');
-  const [germanSource, setGermanSource]   = useState<'sample' | 'upload'>('sample');
+  const [englishSource, setEnglishSource] = useState<'sample' | 'upload'>(hasSampleEnglish ? 'sample' : 'upload');
+  const [germanSource, setGermanSource]   = useState<'sample' | 'upload'>(hasSampleGerman  ? 'sample' : 'upload');
   const [uploadedArray, setUploadedArray] = useState<Array<Record<string, string>> | null>(null);
   const [isRunning, setIsRunning]         = useState(false);
   const [result, setResult]               = useState<TranslationResult | null>(null);
@@ -191,13 +194,17 @@ export default function TranslationClient({
               {englishSource === 'sample' ? 'Pre-loaded sample' : 'Uploaded'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mb-3">{Object.keys(englishJson).length} strings · IBDQ v1.0 · English placeholders in target fields</p>
+          <p className="text-xs text-slate-500 mb-3">
+            {Object.keys(englishJson).length > 0
+              ? `${Object.keys(englishJson).length} strings · English placeholders in target fields`
+              : 'No file loaded — upload a JSON to begin'}
+          </p>
           <div className="flex items-center gap-2">
             <input ref={englishFileRef} type="file" accept=".json" className="hidden" onChange={handleEnglishUpload} />
             <button onClick={() => englishFileRef.current?.click()} className="text-xs text-slate-500 border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-slate-50 transition-colors">
-              Upload different file
+              {Object.keys(englishJson).length > 0 ? 'Upload different file' : 'Upload JSON file'}
             </button>
-            {englishSource === 'upload' && (
+            {englishSource === 'upload' && hasSampleEnglish && (
               <button onClick={() => { setEnglishJson(sampleEnglish); setEnglishSource('sample'); setUploadedArray(null); }} className="text-xs text-indigo-600 hover:text-indigo-800">
                 Use sample
               </button>
@@ -221,13 +228,17 @@ export default function TranslationClient({
               {germanSource === 'sample' ? 'Pre-loaded sample' : 'Uploaded'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mb-3">Arabic (Israel) · author&rsquo;s paper translation · strings copied verbatim</p>
+          <p className="text-xs text-slate-500 mb-3">
+            {translatedDoc.trim().length > 0
+              ? 'Paper translation · strings extracted verbatim'
+              : 'No file loaded — upload a PDF or TXT to begin'}
+          </p>
           <div className="flex items-center gap-2">
             <input ref={germanFileRef} type="file" accept=".txt,.pdf" className="hidden" onChange={handleGermanUpload} />
             <button onClick={() => germanFileRef.current?.click()} className="text-xs text-slate-500 border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-slate-50 transition-colors">
-              Upload different file
+              {translatedDoc.trim().length > 0 ? 'Upload different file' : 'Upload PDF or TXT'}
             </button>
-            {germanSource === 'upload' && (
+            {germanSource === 'upload' && hasSampleGerman && (
               <button onClick={() => { setTranslatedDoc(sampleGerman); setGermanSource('sample'); }} className="text-xs text-indigo-600 hover:text-indigo-800">
                 Use sample
               </button>

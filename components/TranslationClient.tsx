@@ -202,10 +202,10 @@ export default function TranslationClient({
             </div>
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
               englishSource === 'sample'
-                ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
+                ? 'bg-[#EBF3FC] text-[#1B5EA6] border-[#BDD7F5]'
                 : 'bg-emerald-50 text-emerald-700 border-emerald-200'
             }`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${englishSource === 'sample' ? 'bg-indigo-500' : 'bg-emerald-500'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${englishSource === 'sample' ? 'bg-[#2470B7]' : 'bg-emerald-500'}`} />
               {englishSource === 'sample' ? 'Pre-loaded sample' : 'Uploaded'}
             </span>
           </div>
@@ -233,10 +233,10 @@ export default function TranslationClient({
             </div>
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
               germanSource === 'sample'
-                ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
+                ? 'bg-[#EBF3FC] text-[#1B5EA6] border-[#BDD7F5]'
                 : 'bg-emerald-50 text-emerald-700 border-emerald-200'
             }`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${germanSource === 'sample' ? 'bg-indigo-500' : 'bg-emerald-500'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${germanSource === 'sample' ? 'bg-[#2470B7]' : 'bg-emerald-500'}`} />
               {germanSource === 'sample' ? 'Pre-loaded sample' : 'Uploaded'}
             </span>
           </div>
@@ -261,7 +261,7 @@ export default function TranslationClient({
         <button
           onClick={runTranslation}
           disabled={isRunning}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1B5EA6] text-white text-sm font-semibold rounded-lg hover:bg-[#154E8C] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
           {isRunning ? (
             <>
@@ -409,7 +409,7 @@ export default function TranslationClient({
             </button>
             <Link
               href="/validation"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1B5EA6] text-white text-sm font-semibold rounded-lg hover:bg-[#154E8C] transition-colors"
             >
               Proceed to Intake Validation
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

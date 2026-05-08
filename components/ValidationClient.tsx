@@ -110,7 +110,7 @@ function FlagCard({ flag, expanded, onToggle }: { flag: Flag; expanded: boolean;
             <p className="text-sm text-slate-700 leading-relaxed">{flag.issue}</p>
           </div>
           <div className="bg-white border border-slate-200 rounded-lg px-4 py-3">
-            <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wide mb-1.5">Recommended action</p>
+            <p className="text-xs font-semibold text-[#1B5EA6] uppercase tracking-wide mb-1.5">Recommended action</p>
             <p className="text-sm text-slate-700 leading-relaxed">{flag.recommendedAction}</p>
           </div>
         </div>
@@ -276,7 +276,7 @@ export default function ValidationClient({ data }: { data: ValidationData }) {
           </svg>
           Back to Translation
         </Link>
-        <Link href="/review" className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors">
+        <Link href="/review" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1B5EA6] text-white text-sm font-semibold rounded-lg hover:bg-[#154E8C] transition-colors">
           Proceed to Screenshot Review
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

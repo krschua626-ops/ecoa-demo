@@ -20,7 +20,7 @@ function InstrumentContext() {
       <p className="text-xs text-slate-400 mb-0.5">Active instrument</p>
       {hasInstrument ? (
         <>
-          <p className="text-sm font-medium text-indigo-300">
+          <p className="text-sm font-medium text-[#7BB3E0]">
             {instrument.name}{instrument.version ? ` v${instrument.version}` : ''}
           </p>
           {activeLang && (
@@ -73,7 +73,7 @@ export default function Sidebar() {
                   href={step.href}
                   className={`flex items-start gap-3 px-3 py-3 rounded-lg transition-colors group ${
                     isActive
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-[#1B5EA6] text-white'
                       : isCompleted
                       ? 'text-slate-200 hover:bg-slate-700'
                       : isFuture
@@ -85,7 +85,7 @@ export default function Sidebar() {
                   <span
                     className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${
                       isActive
-                        ? 'bg-white text-indigo-600'
+                        ? 'bg-white text-[#1B5EA6]'
                         : isCompleted
                         ? 'bg-emerald-500 text-white'
                         : 'bg-slate-700 text-slate-400 group-hover:bg-slate-600'
@@ -105,7 +105,7 @@ export default function Sidebar() {
                     <span className="text-sm font-medium leading-tight">{step.label}</span>
                     <span
                       className={`text-xs leading-tight mt-0.5 ${
-                        isActive ? 'text-indigo-200' : isCompleted ? 'text-slate-400' : 'text-slate-600'
+                        isActive ? 'text-[#BDD7F5]' : isCompleted ? 'text-slate-400' : 'text-slate-600'
                       }`}
                     >
                       {step.description}

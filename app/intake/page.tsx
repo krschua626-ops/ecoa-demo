@@ -19,8 +19,8 @@ const statusConfig = {
   },
   migration_required: {
     label: 'Migration Required',
-    className: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    dot: 'bg-indigo-500',
+    className: 'bg-[#EBF3FC] text-[#154E8C] border-[#BDD7F5]',
+    dot: 'bg-[#2470B7]',
   },
   pending_license: {
     label: 'Pending License',
@@ -97,18 +97,18 @@ export default function IntakePage() {
               return (
                 <tr
                   key={lang.code}
-                  className={isSelected ? 'bg-indigo-50/50' : 'hover:bg-slate-50'}
+                  className={isSelected ? 'bg-[#EBF3FC]/50' : 'hover:bg-slate-50'}
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       {isSelected && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2470B7] flex-shrink-0" />
                       )}
-                      <span className={`font-medium ${isSelected ? 'text-indigo-700' : 'text-slate-900'}`}>
+                      <span className={`font-medium ${isSelected ? 'text-[#154E8C]' : 'text-slate-900'}`}>
                         {lang.label}
                       </span>
                       {isSelected && (
-                        <span className="text-xs text-indigo-400 font-normal">active</span>
+                        <span className="text-xs text-[#5B9FD4] font-normal">active</span>
                       )}
                     </div>
                   </td>
@@ -146,7 +146,7 @@ export default function IntakePage() {
         </p>
         <Link
           href="/guidelines"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1B5EA6] text-white text-sm font-semibold rounded-lg hover:bg-[#154E8C] transition-colors"
         >
           Proceed to Migration Guidelines
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
